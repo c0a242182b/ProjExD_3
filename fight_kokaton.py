@@ -147,7 +147,7 @@ class Score:
     """
     def __init__(self):
         """
-        スコアに関する
+        スコアに関するイニシャライザ
         """
         self.fonto = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体",30)
         self.color = (0,0,255)
@@ -157,6 +157,9 @@ class Score:
         self.rct.center = (100,600)
 
     def update(self, screen: pg.Surface):
+        """
+        updateメソッド
+        """
         self.img = self.fonto.render(f"スコア：{self.score}",0,self.color)
         screen.blit(self.img, self.rct)
 
@@ -173,14 +176,16 @@ def main():
     #     bombs.append(Bomb((255,0,0),10))
     clock = pg.time.Clock()
     tmr = 0
-    score1 = Score()
+    score1 = Score() # scoreインスタンスの生成
+    beams=[] # Beamクラスのインスタンスを複数扱う空のリスト
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
                 # スペースキー押下でBeamクラスのインスタンス生成
-                beam = Beam(bird)            
+                beam = Beam(bird)   
+                beams.append(beam) # ビームをリストに追加     
         screen.blit(bg_img, [0, 0])
         score1.update(screen)
         
@@ -198,21 +203,26 @@ def main():
                 time.sleep(1)
                 return
             
-        if beam is not None:
+        if len(beams) > 0:
             #if bomb is not None:
             for j,bomb in enumerate(bombs):
-                if beam is not None:
+                for k,beam in enumerate(beams): # 複数のビーム
+                    if beam is None:
+                        continue
                     if beam.rct.colliderect(bomb.rct): # ビームと爆弾の衝突判定
-                        beam = None # ビームを消す
+                        beams[k] = None # ビームを消す
                         bombs[j] = None # 爆弾を消す
                         bird.change_img(6, screen) # 喜びエフェクト
-                        score1.score+=1
-            bombs = [bomb for bomb in bombs if bomb is not None] # 打ちをとされていない爆弾だけのリストに
-
+                        score1.score+=1 # 撃ち落とした爆弾の数をカウント
+            bombs = [bomb for bomb in bombs if bomb is not None] # 打ちをとされていない爆弾だけのリスト更新
+            beams = [beam for beam in beams if beam is not None] # あたってないビームだけのリスト更新
+        
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
-        if beam is not None:
-            beam.update(screen)   
+        # if beam is not None:
+        #     beam.update(screen)   
+        for beam in beams:
+            beam.update(screen)
         for bomb in bombs:
             bomb.update(screen)
         pg.display.update()
