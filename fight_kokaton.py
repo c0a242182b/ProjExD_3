@@ -149,12 +149,12 @@ class Score:
         """
         スコアに関するイニシャライザ
         """
-        self.fonto = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体",30)
-        self.color = (0,0,255)
-        self.score = 0
-        self.img = self.fonto.render(f"スコア：{self.score}",0,self.color)
+        self.fonto = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体",30) # スコアのフォントの設定
+        self.color = (0,0,255) # スコアのフォントのカラー
+        self.score = 0 # スコアの初期値
+        self.img = self.fonto.render(f"スコア：{self.score}",0,self.color) # 文字列のSurfaceSurface
         self.rct = self.img.get_rect()
-        self.rct.center = (100,600)
+        self.rct.center = (100,600) # 文字列の中心座標
 
     def update(self, screen: pg.Surface):
         """
