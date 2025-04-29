@@ -163,6 +163,23 @@ class Score:
         self.img = self.fonto.render(f"スコア：{self.score}",0,self.color)
         screen.blit(self.img, self.rct)
 
+
+class Explosion:
+    """
+    爆弾エフェクトに関するクラス
+    """
+    def __init__(self, bomb:"Bomb" , screen: pg.Surface):
+        """
+        爆弾エフェクトに関するイニシャライザ
+        """
+        self.img = pg.image.load(f"fig/explosion.gif") # explosion Surface
+        self.img2 = pg.transform.flip(self.img,True, True)
+        self.imglst = pg.Surface(self.img,self.img2)
+        self.rct = self.img.get_rect() # explosion Rect
+        self.rct.center = center # 爆弾の座標
+        self.life = life # 爆発表示時間
+
+
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
